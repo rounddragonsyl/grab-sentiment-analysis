@@ -1,0 +1,39 @@
+# Data collection
+google-play-scraper==1.2.7
+app-store-scraper==0.3.5
+
+# Data manipulation
+pandas==2.2.3
+numpy==1.26.4
+
+# Visualisation
+matplotlib==3.9.2
+seaborn==0.13.2
+wordcloud==1.9.3
+plotly==5.24.1
+
+# NLP utilities
+nltk==3.9.1
+vaderSentiment==3.3.2
+langdetect==1.0.9
+
+# Transformers / deep learning
+transformers==4.45.2
+torch==2.4.1
+datasets==3.0.2
+scikit-learn==1.5.2
+accelerate==1.0.1
+
+# Topic modelling
+bertopic==0.16.4
+sentence-transformers==3.2.1
+umap-learn==0.5.6
+hdbscan==0.8.38.post1
+
+# Dashboard
+streamlit==1.39.0
+
+# Notebook runtime
+jupyter==1.1.1
+ipykernel==6.29.5
+tqdm==4.66.5

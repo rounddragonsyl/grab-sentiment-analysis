@@ -216,3 +216,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project-specific
+data/
+*.csv
+models/
+*.pt
+*.bin
+*.safetensors
+runs/
+lightning_logs/
