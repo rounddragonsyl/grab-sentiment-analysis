@@ -72,8 +72,8 @@ df_f = df[
 # ── KPI row ───────────────────────────────────────────────────────────────────
 k1, k2, k3, k4 = st.columns(4)
 k1.metric("Total Reviews", f"{len(df_f):,}")
-k2.metric("% Negative", f"{(df_f['bert_pred'] == 'negative').mean() * 100:.1f}%")
-k3.metric("% Positive", f"{(df_f['bert_pred'] == 'positive').mean() * 100:.1f}%")
+k2.metric("% Negative", f"{(df_f['model_pred'] == 'negative').mean() * 100:.1f}%")
+k3.metric("% Positive", f"{(df_f['model_pred'] == 'positive').mean() * 100:.1f}%")
 k4.metric("Avg Star Rating", f"{df_f['rating'].mean():.2f} ⭐")
 
 st.divider()
@@ -84,24 +84,24 @@ c1, c2 = st.columns(2)
 with c1:
     st.subheader("Sentiment by Topic")
     topic_sent = (
-        df_f.groupby(['topic_label', 'bert_pred'])
+        df_f.groupby(['topic_label', 'model_pred'])
         .size()
         .reset_index(name='count')
     )
     fig_bar = px.bar(
         topic_sent,
-        x='count', y='topic_label', color='bert_pred',
+        x='count', y='topic_label', color='model_pred',
         orientation='h',
         color_discrete_map=SENTIMENT_COLORS,
-        labels={'topic_label': 'Topic', 'count': 'Reviews', 'bert_pred': 'Sentiment'},
-        category_orders={'bert_pred': ['negative', 'neutral', 'positive']},
+        labels={'topic_label': 'Topic', 'count': 'Reviews', 'model_pred': 'Sentiment'},
+        category_orders={'model_pred': ['negative', 'neutral', 'positive']},
     )
     fig_bar.update_layout(barmode='stack', height=420, margin=dict(l=0, r=0, t=10, b=0))
     st.plotly_chart(fig_bar, use_container_width=True)
 
 with c2:
     st.subheader("Overall Sentiment Split")
-    sent_counts = df_f['bert_pred'].value_counts().reset_index()
+    sent_counts = df_f['model_pred'].value_counts().reset_index()
     sent_counts.columns = ['Sentiment', 'Count']
     fig_pie = px.pie(
         sent_counts, values='Count', names='Sentiment',
@@ -148,7 +148,7 @@ st.divider()
 st.subheader("Sentiment Trend Over Time (per Topic)")
 
 score_map = {'negative': -1, 'neutral': 0, 'positive': 1}
-df_f['sent_score'] = df_f['bert_pred'].map(score_map)
+df_f['sent_score'] = df_f['model_pred'].map(score_map)
 
 top_topics_by_vol = df_f['topic_label'].value_counts().head(6).index.tolist()
 trend_topics = st.multiselect("Topics to show", top_topics_by_vol, default=top_topics_by_vol[:4])
@@ -191,7 +191,7 @@ with col_t:
 
 sample = df_f.copy()
 if sent_filter != 'All':
-    sample = sample[sample['bert_pred'] == sent_filter]
+    sample = sample[sample['model_pred'] == sent_filter]
 if topic_filter != 'All':
     sample = sample[sample['topic_label'] == topic_filter]
 
@@ -200,8 +200,8 @@ if search:
     sample = sample[sample['review_clean'].str.contains(search, case=False, na=False)]
 
 st.dataframe(
-    sample[['date', 'rating', 'source', 'bert_pred', 'vader_pred', 'topic_label', 'review_clean']]
-    .rename(columns={'review_clean': 'review', 'bert_pred': 'model_sentiment', 'vader_pred': 'vader_sentiment'})
+    sample[['date', 'rating', 'source', 'model_pred', 'vader_pred', 'topic_label', 'review_clean']]
+    .rename(columns={'review_clean': 'review', 'model_pred': 'model_sentiment', 'vader_pred': 'vader_sentiment'})
     .sort_values('date', ascending=False)
     .head(100),
     use_container_width=True,
